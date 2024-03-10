@@ -1,18 +1,17 @@
-function Ingreso() {
-  let Entrada = "";
-  Entrada = prompt("Ingrese clave:");
-  if(Entrada == "PrimeraEntrega") {
-    alert("Entrada correcta");
-  }
-}
-
-function CalculadorCuotas() {
+function SimuladorPrestamo() {
+	let Cantidad = 0;
   let Cuotas = 0;
-  Cuotas = parseInt(prompt("Ingrese cantidad de cuotas:"));
-  for(let i = 1; i <= Cuotas; i = i + 1) {
-    alert("Cuota " + i);
+  let Monto = 0.0;
+  Cantidad = parseInt(prompt("Ingrese cantidad de prestamos a pedir:"));
+  for(let i = 1; i <= Cantidad; i = i + 1) {
+  	Monto = parseFloat(prompt("Ingrese monto del prestamo "+ i+ ":"));
+  	Cuotas = parseInt(prompt("Ingrese cantidad de cuotas mayor a 0:"));
+    if(Cuotas < 1) {
+    	alert("Cantidad de cuotas ingresadas incorrecta, recargue la pagina para reintentar");
+      return;
+    }
+    alert("Prestamo " + i + ": " + Cuotas + " cuotas de $" + Monto/Cuotas);
   }
 }
 
-Ingreso();
-CalculadorCuotas();
+SimuladorPrestamo();
