@@ -145,10 +145,10 @@ function calcularSimulador() {
 	let amortizacion = "Frances Mensual";
 	let calculo = document.createElement("div");
 	if(capitalSimul <= 0  || isNaN(capitalSimul)) {
-		calculo.innerHTML = `<p>Por favor ingrese un monto de Capital positivo</p>`
+		calculo.innerHTML = `<p class="error">Por favor ingrese un monto de Capital positivo</p>`
 	}
 	else if(cuotasSimul <= 0 || isNaN(cuotasSimul)) {
-		calculo.innerHTML = `<p>Por favor ingrese una cantidad de cuotas positiva</p>`
+		calculo.innerHTML = `<p class="error">Por favor ingrese una cantidad de cuotas positiva</p>`
 	}
 	else {
 		let total = capitalSimul + capitalSimul * (tna/100.0) * cuotasSimul / 12;
@@ -158,7 +158,10 @@ function calcularSimulador() {
 		<button id="solicitarSimul">Solicitar</button>
 		</div>
 		<div class="resp">
-		Total: $${total} Amortizacion: ${amortizacion} <h5>Usted devuelve: ${cuotasSimul} x $${total/cuotasSimul}</h5>
+		Total: $${total.toFixed(2)} Amortizacion: ${amortizacion}
+		</div>
+		<div class="resp">
+		<h5>Prestamo pre-aprobado, usted devuelve: ${cuotasSimul} x $${(total/cuotasSimul).toFixed(2)}</h5>
 		</div>
 		`;
 		respSimul.appendChild(calculo);
@@ -182,7 +185,8 @@ function solicitarPrestamo(capitalSimul,cuotasSimul,total,tna,amortizacion) {
 		cuotas: cuotasSimul,
 		total: total,
 		tna: tna,
-		amortizacion: amortizacion
+		amortizacion: amortizacion,
+		fechaOrig: (new Date()).toLocaleDateString()
 	}
 	prestamos.push(prestamo);
 	localStorage.setItem("prestamos",JSON.stringify(prestamos));
@@ -197,19 +201,28 @@ function mostrarPrestamos() {
 	prestamos.filter((el) => el.username == username.value).forEach(prestamo => {
 		const card = document.createElement("div");
 		contador++;
-		let innerCard = `
-		<div class="titulo">
-			<p>Prestamos vigentes</p>
-		</div>
+		let fechaPartes = prestamo.fechaOrig.split("/");
+		let fecha1erVto = new Date(fechaPartes[2], fechaPartes[1] - 1, fechaPartes[0]);
+		let auxFecha;
+		let innerCard ="";
+		if(contador == 1) {
+			innerCard = `
+			<div class="titulo">
+				<p>Prestamos vigentes</p>
+			</div>`
+		}
+		innerCard += `
 		<div class="subTitulo">
-			<p>Prestamo: #${contador} Monto: $${prestamo.total} Cuotas: ${prestamo.cuotas} TNA: ${prestamo.tna}% Amort: ${prestamo.amortizacion}</p>
+			<p>Prestamo: #${contador} Monto: $${prestamo.total.toFixed(2)} Cuotas: ${prestamo.cuotas} TNA: ${prestamo.tna}% Amort: ${prestamo.amortizacion}</p>
 		</div>
 		<div class="detalleCuotas">
-			<p>Cuota Vencimiento Monto Adeudado Estado</p>`
+			<div class="cabecera">Cuota Vencimiento Monto Adeudado Estado</div>
+			<div class="cuotas">`
 		for(let i = 0; i < prestamo.cuotas; i++) {
-			innerCard += `<p>${i+1} 21/03/2024 $${prestamo.total/prestamo.cuotas} $${prestamo.total/prestamo.cuotas} A Vencer</p>`;
+			auxFecha = new Date(fecha1erVto.setMonth(fecha1erVto.getMonth() + 1)).toLocaleDateString()
+			innerCard += `<p>${i+1} ${auxFecha} $${(prestamo.total/prestamo.cuotas).toFixed(2)} $${(prestamo.total/prestamo.cuotas).toFixed(2)} A Vencer</p>`;
 		}
-		innerCard += "</div>";
+		innerCard += "</div></div>";
 		;
 		card.innerHTML = innerCard;
 		prestamosVigentes.appendChild(card);

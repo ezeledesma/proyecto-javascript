@@ -8,6 +8,10 @@ body {
 	background-color: rgb(75, 75, 75);
 }
 
+h1 {
+	color: whitesmoke;
+}
+
 #contenedorLog {
 	display: flex;
 	flex-direction: row;
@@ -31,6 +35,12 @@ body {
 #contenedorLog button:hover {
 	cursor: pointer;
 }
+
+#contenedorLog input {
+	border-radius: 5px;
+	padding: .1875rem;
+}
+
 
 .mensajeLog {
 	display: flex;
@@ -71,7 +81,7 @@ body {
 } */
 
 .inicioSimul h3 {
-	background-color: black;
+	background-color: #1E1D1D;
 	color: whitesmoke;
 	width: 100%;
 	height: 50px;
@@ -90,6 +100,8 @@ body {
 .entradaSimul input {
 	border-radius: 5px;
 	background-color: rgb(167, 167, 167);
+	padding: .3125rem;
+	text-align: right;
 }
 
 .entradaSimul button {
@@ -138,4 +150,43 @@ body {
 
 .resp h5 {
 	color: rgb(102, 149, 31);
+	font-size: medium;
+}
+
+.error {
+	color:rgb(177, 5, 5);
+}
+
+#contenedorPr {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+#contenedorPr .titulo {
+	background-color: #1E1D1D;
+	color: whitesmoke;
+	width: 100%;
+	height: 3.125rem;
+	font-size: larger;
+}
+
+#contenedorPr .subTitulo {
+	background-color: #3663A6;
+	width: 100%;
+	color: whitesmoke;
+}
+
+#contenedorPr .detalleCuotas .cabecera {
+	background-color: #3663A6;
+	width: 100%;
+	color: whitesmoke;
+}
+
+#contenedorPr .detalleCuotas .cuotas {
+	background-color: #3663A6;
+	width: 100%;
+	background-color: rgb(209, 209, 209);
 }
