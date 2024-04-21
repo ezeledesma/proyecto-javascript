@@ -4,14 +4,69 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Tercera Entrega</title>
+	<link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-	<header>
-	</header>
-	<main>
-	</main>
-	<footer>
-	</footer>
-  <script src="./js/main.js"></script>
+
+	<h1>TuPrestamo.com</h1>
+	<hr>
+
+	<div id="contenedorLog">
+		<p>Usuario:</p>
+		<input type="text" id="username">
+		<button id="logIn">Ingresar</button>
+	</div>
+
+	<div id="contenedorMensajeLog">
+
+	</div>
+	<br>
+
+	<div id="contenedorSimul">
+		<div id="inputSimul"></div>
+		<div id="respSimul"></div>
+		<!-- <p>Simulacion</p>
+		<p>Capital: </p>
+		<input type="text" id="capitalSimul">
+		<p>Cuotas</p>
+		<input type="number" id="cuotasSimul">
+		<button id="botonCalcularSimul">Calcular</button>
+		<h3>Prestamo: #3</h3>
+		<p>Capital: $80000 Cuotas: 12 TNA: 50%</p>
+		<p>Total: $120000 Amortizacion: Frances Mensual</p>
+		<button id="solicitarSimul">Solicitar</button>
+		<p>Devuelve: $10000 x 12</p> -->
+	</div>
+	<br>
+
+	<div id="contenedorPr">
+		<div class="titulo">
+			<p>Prestamos vigentes</p>
+		</div>
+		<div class="subTitulo">
+			<p>Prestamo: #1 Monto: $12000 Cuotas: 6 TNA: 50% Adeudado: $10000</p>
+		</div>
+		<div class="detalleCuotas">
+			<p>Cuota Vencimiento Monto Adeudado Estado</p>
+			<p>1 21/03/2024 $2000 $0 Pagada</p>
+			<p>2 21/04/2024 $2000 $2000 Vencida</p><button id="pr1pag2">Pagar</button>
+			<p>3 21/05/2024 $2000 $2000 A Vencer</p><button id="pr1pag3">Pagar</button>
+			<p>3 21/06/2024 $2000 $2000 A Vencer</p><button id="pr1pag4">Pagar</button>
+			<p>3 21/07/2024 $2000 $2000 A Vencer</p><button id="pr1pag5">Pagar</button>
+			<p>3 21/08/2024 $2000 $2000 A Vencer</p><button id="pr1pag6">Pagar</button>
+		</div>
+		<div class="subTitulo">
+			<p>Prestamo: #2 Monto: $300000 Cuotas: 3 TNA: 50% Adeudado: $100000</p>
+		</div>
+		<div class="detalleCuotas">
+			<p>Cuota Vencimiento Monto Adeudado Estado</p>
+			<p>1 21/03/2024 $100000 $0 Pagada</p>
+			<p>2 21/04/2024 $100000 $0 Pagada</p>
+			<p>3 21/05/2024 $100000 $100000 A Vencer</p><button id="pr2pag3">Pagar</button>
+		</div>
+	</div>
+	<br>
+
+	<script src="./js/main.js"></script>
 </body>
 </html>
