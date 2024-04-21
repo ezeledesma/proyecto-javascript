@@ -1,0 +1,141 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box; 
+}
+
+body {
+	background-color: rgb(75, 75, 75);
+}
+
+#contenedorLog {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 1.25rem;
+	height: 2.5rem;
+}
+
+#contenedorLog label {
+	color: whitesmoke;
+}
+
+#contenedorLog button {
+	width: 100px;
+	height: 80%;
+	background-color: rgb(97, 97, 97);
+	border-radius: 5px;
+}
+
+#contenedorLog button:hover {
+	cursor: pointer;
+}
+
+.mensajeLog {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 2.5rem;
+	height: 2.5rem;
+}
+
+.mensajeLog h3 {
+	color:whitesmoke;
+	margin:1.25rem;
+}
+
+.mensajeLog button {
+	width: 100px;
+	height: 80%;
+	background-color: rgb(97, 97, 97);
+	border-radius: 5px;
+}
+
+.mensajeLog button:hover {
+	cursor: pointer;
+}
+
+#contenedorSimul {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	background-color: rgb(209, 209, 209);
+}
+
+/* .inicioSimul {
+	background-color: black;
+} */
+
+.inicioSimul h3 {
+	background-color: black;
+	color: whitesmoke;
+	width: 100%;
+	height: 50px;
+}
+
+.entradaSimul {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 3.125rem;
+	gap: 1.25rem;
+}
+
+.entradaSimul input {
+	border-radius: 5px;
+	background-color: rgb(167, 167, 167);
+}
+
+.entradaSimul button {
+	background-color: rgb(105, 104, 104);
+	border-radius: 5px;
+	width: 4.375rem;
+	height: 2.5rem;
+}
+
+.entradaSimul button:hover {
+	cursor:pointer;
+}
+
+.entradaSimul input:nth-child(1) {
+	width: 6.25rem;
+}
+
+.entradaSimul input:nth-child(2) {
+	width: 3.75rem;
+}
+
+.respSimul {
+	height: 3.125rem;
+}
+
+.respSimul .resp {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	gap:50px;
+	height: 3.125rem;
+}
+
+.resp button {
+	background-color: rgb(102, 149, 31);
+	width: 80px;
+	height: 30px;
+	border-radius: 5px;
+}
+
+.resp button:hover {
+	cursor: pointer;
+}
+
+.resp h5 {
+	color: rgb(102, 149, 31);
+}

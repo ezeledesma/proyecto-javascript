@@ -92,6 +92,7 @@ const mensaje = document.getElementById("contenedorMensajeLog");
 
 function mostrarBienvenida(username, tipo) {
 	let msj = document.createElement("div");
+	msj.classList.add("mensajeLog");
 	if(tipo == "existente") {
 		msj.innerHTML = `<h3>Sesion iniciada como: ${username}</h3>`;
 	}
@@ -104,7 +105,7 @@ function mostrarBienvenida(username, tipo) {
 	logOut.addEventListener("click", () => {
 		document.getElementById("username").value = "";
 		username.innerHTML = "";
-		contenedorLog.style.display = "inline";
+		contenedorLog.style.display = "flex";
 		mensaje.innerHTML = "";
 		simulador.innerHTML = "";
 		respSimul.innerHTML = "";
@@ -119,13 +120,15 @@ const respSimul = document.getElementById("respSimul");
 
 function mostrarSimulador() {
 	let simul = document.createElement("div");
+	simul.classList.add("inicioSimul");
 	simul.innerHTML = `
 	<h3>Simulador</h3>
+	<div class="entradaSimul">
 	Capital: <input type="text" id="capitalSimul">
-	<br>
 	Cuotas: <input type="number" id="cuotasSimul">
 	TNA: 50,0%
 	<button id="calcularSimul">Calcular</button>
+	</div>
 	`;
 	simulador.appendChild(simul);
 	let calcularSimul = document.getElementById("calcularSimul");
@@ -150,10 +153,13 @@ function calcularSimulador() {
 	else {
 		let total = capitalSimul + capitalSimul * (tna/100.0) * cuotasSimul / 12;
 		calculo.innerHTML = `
-		Capital: ${capitalSimul} Cuotas: ${cuotasSimul}
-		Total: ${total} Amortizacion: ${amortizacion}
+		<div class="resp">
+		Capital: $${capitalSimul} Cuotas: ${cuotasSimul} TNA: ${tna}%
 		<button id="solicitarSimul">Solicitar</button>
-		<p>Usted devuelve: ${cuotasSimul} x ${total/cuotasSimul}</p>
+		</div>
+		<div class="resp">
+		Total: $${total} Amortizacion: ${amortizacion} <h5>Usted devuelve: ${cuotasSimul} x $${total/cuotasSimul}</h5>
+		</div>
 		`;
 		respSimul.appendChild(calculo);
 		let solicitarSimul = document.getElementById("solicitarSimul");
