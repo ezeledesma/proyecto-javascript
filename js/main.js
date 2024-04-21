@@ -1,3 +1,4 @@
+/*
 const Prestamos = [];
 
 class Prestamo {
@@ -46,30 +47,24 @@ function BuscarPrestamo() {
 
 //SimuladorPrestamo();
 //BuscarPrestamo();
+*/
+
 
 // Parte 3
 
-/*
-
-1) Leo usuario al apretar en Entrar
-2) Si existe levanto datos
-3) Si no existe creo usuario y lo guardo
-4) Dejo mensaje de bienvenida y cargo ventanas de simulacion y prestamos
-5) Habilito boton para salir?
-
-*/
 
 // Log In
 
 let usuarios = [];
 
+const contenedorLog = document.getElementById("contenedorLog");
 const username = document.getElementById("username");
 const btnLogIn = document.getElementById("logIn");
 
 btnLogIn.addEventListener("click", () => {
 	const usuariosJson = localStorage.getItem("usuarios");
 	usuarios = JSON.parse(usuariosJson);
-	btnLogIn.style.display = "none";
+	contenedorLog.style.display = "none";
 	if(usuarios) {
 		// Existen usuarios
 		if(usuarios.find((el) => el.username === username.value)){
@@ -89,18 +84,32 @@ btnLogIn.addEventListener("click", () => {
 	// Lo guardo
 	localStorage.setItem("usuarios",JSON.stringify(usuarios));
 	mostrarSimulador();
+	cargarPrestamos();
+	mostrarPrestamos();
 });
 
+const mensaje = document.getElementById("contenedorMensajeLog");
+
 function mostrarBienvenida(username, tipo) {
-	const mensaje = document.getElementById("contenedorMensajeLog");
-	let msj = document.createElement("p");
+	let msj = document.createElement("div");
 	if(tipo == "existente") {
-		msj.innerText = `Sesion iniciada como: ${username}`;
+		msj.innerHTML = `<h3>Sesion iniciada como: ${username}</h3>`;
 	}
 	else if (tipo == "nuevo") {
-		msj.innerText = `Bienvenido ${username}, se registro su nuevo usuario`;
+		msj.innerHTML = `<h3>Bienvenido ${username}, se registro su nuevo usuario</h3>`;
 	}
+	msj.innerHTML += `<button id="logOut">Salir</button>`;
 	mensaje.appendChild(msj);
+	let logOut = document.getElementById("logOut");
+	logOut.addEventListener("click", () => {
+		document.getElementById("username").value = "";
+		username.innerHTML = "";
+		contenedorLog.style.display = "inline";
+		mensaje.innerHTML = "";
+		simulador.innerHTML = "";
+		respSimul.innerHTML = "";
+		prestamosVigentes.innerHTML = "";
+	});
 };
 
 // Simulador
@@ -129,6 +138,8 @@ function calcularSimulador() {
 	respSimul.innerHTML = ""
 	const capitalSimul = parseInt(document.getElementById("capitalSimul").value);
 	const cuotasSimul = parseInt(document.getElementById("cuotasSimul").value);
+	let tna = 50;
+	let amortizacion = "Frances Mensual";
 	let calculo = document.createElement("div");
 	if(capitalSimul <= 0  || isNaN(capitalSimul)) {
 		calculo.innerHTML = `<p>Por favor ingrese un monto de Capital positivo</p>`
@@ -137,22 +148,75 @@ function calcularSimulador() {
 		calculo.innerHTML = `<p>Por favor ingrese una cantidad de cuotas positiva</p>`
 	}
 	else {
-		let total = capitalSimul + capitalSimul * 0.5 * cuotasSimul / 12;
+		let total = capitalSimul + capitalSimul * (tna/100.0) * cuotasSimul / 12;
 		calculo.innerHTML = `
 		Capital: ${capitalSimul} Cuotas: ${cuotasSimul}
-		Total: ${total} Amortizacion: Frances Mensual
+		Total: ${total} Amortizacion: ${amortizacion}
 		<button id="solicitarSimul">Solicitar</button>
-		<p>Devuelve: ${cuotasSimul} x ${total/cuotasSimul}</p>
+		<p>Usted devuelve: ${cuotasSimul} x ${total/cuotasSimul}</p>
 		`;
+		respSimul.appendChild(calculo);
+		let solicitarSimul = document.getElementById("solicitarSimul");
+		solicitarSimul.addEventListener("click", () => {
+			solicitarPrestamo(capitalSimul,cuotasSimul,total,tna,amortizacion);
+		});
+		return;
 	}
 	respSimul.appendChild(calculo);
 }
 
-
-const prestamosVigentes = document.getElementById("contenedorPrestamos");
-
 // Prestamos
 
-function mostrarPrestamos() {
+let prestamos = [];
 
+function solicitarPrestamo(capitalSimul,cuotasSimul,total,tna,amortizacion) {
+	let prestamo = {
+		username: username.value,
+		capital: capitalSimul,
+		cuotas: cuotasSimul,
+		total: total,
+		tna: tna,
+		amortizacion: amortizacion
+	}
+	prestamos.push(prestamo);
+	localStorage.setItem("prestamos",JSON.stringify(prestamos));
+	mostrarPrestamos();
+}
+
+const prestamosVigentes = document.getElementById("contenedorPr");
+
+function mostrarPrestamos() {
+	prestamosVigentes.innerHTML = "";
+	let contador = 0;
+	prestamos.filter((el) => el.username == username.value).forEach(prestamo => {
+		const card = document.createElement("div");
+		contador++;
+		let innerCard = `
+		<div class="titulo">
+			<p>Prestamos vigentes</p>
+		</div>
+		<div class="subTitulo">
+			<p>Prestamo: #${contador} Monto: $${prestamo.total} Cuotas: ${prestamo.cuotas} TNA: ${prestamo.tna}% Amort: ${prestamo.amortizacion}</p>
+		</div>
+		<div class="detalleCuotas">
+			<p>Cuota Vencimiento Monto Adeudado Estado</p>`
+		for(let i = 0; i < prestamo.cuotas; i++) {
+			innerCard += `<p>${i+1} 21/03/2024 $${prestamo.total/prestamo.cuotas} $${prestamo.total/prestamo.cuotas} A Vencer</p>`;
+		}
+		innerCard += "</div>";
+		;
+		card.innerHTML = innerCard;
+		prestamosVigentes.appendChild(card);
+
+		// Boton pagar
+	})
+}
+
+function cargarPrestamos() {
+	let prestamosJson = localStorage.getItem("prestamos");
+	let todosLosPrestamos = JSON.parse(prestamosJson);
+	if(todosLosPrestamos) {
+		// Si hay elementos guardados, los cargo
+		prestamos = todosLosPrestamos;
+	}
 }
