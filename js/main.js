@@ -60,8 +60,18 @@ let usuarios = [];
 const contenedorLog = document.getElementById("contenedorLog");
 const username = document.getElementById("username");
 const btnLogIn = document.getElementById("logIn");
+const respLog = document.getElementById("respLog");
 
 btnLogIn.addEventListener("click", () => {
+	respLog.innerHTML = "";
+	if(username.value == "") {
+		// Si no ingreso un nombre, rechazo
+		let rechazo = document.createElement("p");
+		rechazo.classList.add("error");
+		rechazo.innerText = "Ingrese un usuario";
+		respLog.appendChild(rechazo);
+		return;
+	}
 	const usuariosJson = localStorage.getItem("usuarios");
 	usuarios = JSON.parse(usuariosJson);
 	contenedorLog.style.display = "none";
