@@ -20,6 +20,7 @@
   * Apretar sobre el boton "Calcular"
   * De estar de acuerdo con lo simulado, apretar sobre el boton "Solicitar" para asociar el prestamo al usuario
 * Si el usuario ya tiene prestamos asociados, se puede ver el detalle al ingresar o sino al solicitar un nuevo prestamo
+* En cualquier momento se puede apretar sobre el boton "Salir", para cambiar de usuario o crear uno nuevo
   
 > [!NOTE]
 > El sitio aun se encuentra en desarrollo (entrega 3 de 4)
