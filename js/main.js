@@ -1,58 +1,3 @@
-/*
-const Prestamos = [];
-
-class Prestamo {
-	constructor(numero, monto, cuotas) {
-		this.numero = numero;
-		this.monto = monto;
-		this.cuotas = cuotas;
-		this.importeCuota = this.monto/this.cuotas;
-	}
-}
-
-function SimuladorPrestamo() {
-	let Cantidad = 0;
-	let Cuotas = 0;
-	let Monto = 0.0;
-	Cantidad = parseInt(prompt("Ingrese cantidad de prestamos a pedir:"));
-	for(let i = 1; i <= Cantidad; i = i + 1) {
-		Monto = parseFloat(prompt("Ingrese monto del prestamo "+ i+ ":"));
-		Cuotas = parseInt(prompt("Ingrese cantidad de cuotas mayor a 0:"));
-		if(Cuotas < 1) {
-			alert("Cantidad de cuotas ingresadas incorrecta, recargue la pagina para reintentar");
-			return;
-		}
-		Prestamos.push(new Prestamo(i,Monto,Cuotas));
-		alert("Prestamo " + i + ": " + Cuotas + " cuotas de $" + Monto/Cuotas);
-	}
-}
-
-function BuscarPrestamo() {
-	let Numero = 0;
-	let Consulta = 0;
-	let Aux=[];
-	Consulta = parseInt(prompt("Ingrese '1' si quiere consultar algun prestamo"));
-	while(Consulta == 1) {
-		Numero = parseInt(prompt("Ingrese numero de prestamo a consultar:"));
-		if(Numero > Prestamos.length || Numero < 1) {
-			alert("No existe el numero de prestamo ingresado");
-		}
-		else {
-			Aux = Prestamos.filter((el) => el.numero == Numero)[0];
-			alert("Prestamo " + Aux.numero + ": " + Aux.cuotas + " cuotas de $" + Aux.importeCuota);
-		}
-		Consulta = parseInt(prompt("Ingrese '1' si quiere realizar otra consulta"));
-	}
-}
-
-//SimuladorPrestamo();
-//BuscarPrestamo();
-*/
-
-
-// Parte 3
-
-
 // Log In
 
 let usuarios = [];
@@ -60,16 +5,16 @@ let usuarios = [];
 const contenedorLog = document.getElementById("contenedorLog");
 const username = document.getElementById("username");
 const btnLogIn = document.getElementById("logIn");
-const respLog = document.getElementById("respLog");
+const criptoYa = "https://criptoya.com/api/dolar";
+let logged = false;
 
 btnLogIn.addEventListener("click", () => {
-	respLog.innerHTML = "";
 	if(username.value == "") {
-		// Si no ingreso un nombre, rechazo
-		let rechazo = document.createElement("p");
-		rechazo.classList.add("error");
-		rechazo.innerText = "Ingrese un usuario";
-		respLog.appendChild(rechazo);
+		Swal.fire({
+			icon: "info",
+			title: "Oops...",
+			text: "Por favor ingrese un usuario!"
+		});
 		return;
 	}
 	const usuariosJson = localStorage.getItem("usuarios");
@@ -96,6 +41,7 @@ btnLogIn.addEventListener("click", () => {
 	mostrarSimulador();
 	cargarPrestamos();
 	mostrarPrestamos();
+	logged = true;
 });
 
 const mensaje = document.getElementById("contenedorMensajeLog");
@@ -120,6 +66,7 @@ function mostrarBienvenida(username, tipo) {
 		simulador.innerHTML = "";
 		respSimul.innerHTML = "";
 		prestamosVigentes.innerHTML = "";
+		logged = false;
 	});
 };
 
@@ -127,15 +74,26 @@ function mostrarBienvenida(username, tipo) {
 
 const simulador = document.getElementById("inputSimul");
 const respSimul = document.getElementById("respSimul");
+let intervaloMonedas;
 
 function mostrarSimulador() {
 	let simul = document.createElement("div");
 	simul.classList.add("inicioSimul");
 	simul.innerHTML = `
-	<h3>Simulador</h3>
+	<h3>Simulador: solicita tu prestamo, devolve en ARS ($) y en cuotas fijas</h3>
 	<div class="entradaSimul">
 	Capital: <input type="text" id="capitalSimul">
 	Cuotas: <input type="number" id="cuotasSimul">
+	<select id="select">
+		<option value="1" id="ars" selected>ARS</option>
+		<option value="1" id="oficial" >USD Oficial</option>
+		<option value="1" id="ahorro" >USD Ahorro</option>
+		<option value="1" id="blue" >USD Blue</option>
+		<option value="1" id="cripto" >USD Cripto</option>
+		<option value="1" id="ccl" >USD CCL</option>
+		<option value="1" id="mep" >USD Mep</option>
+	</select>
+	Cotizacion: $<div id="cotizacion">1</div>
 	TNA: 50,0%
 	<button id="calcularSimul">Calcular</button>
 	</div>
@@ -145,20 +103,94 @@ function mostrarSimulador() {
 	calcularSimul.addEventListener("click", () => {
 		calcularSimulador();
 	});
+	
+	let actualizarSelect = document.getElementById("select");
+	actualizarSelect.addEventListener("change", () => {
+		actualizarCotizacion();
+	});
+
+	// Frecuencia de actualizacion de la cotizacion
+	actualizarMonedas();
+	intervaloMonedas = setInterval( () => {
+		if(logged) {
+			actualizarMonedas();
+		}
+		else {
+			clearInterval(intervaloMonedas);
+		}
+	},3000);
+}
+
+function actualizarCotizacion () {
+	let select = document.getElementById("select");
+	let cotizacion = document.getElementById("cotizacion");
+	for (let i = 0; i < select.length; i++) {
+		if(select[i].selected == true) {
+			cotizacion.innerText = select[i].value;
+		}
+	}
+}
+
+function actualizarMonedas() {
+	const combo = document.getElementById("select");
+	fetch(criptoYa)
+		.then(response => response.json())
+		.then(({oficial, ahorro, blue, cripto, ccl, mep}) => {
+			for (let i = 0; i < combo.length; i++) {
+				if(combo[i].id == "oficial") {
+					combo[i].value = oficial.price.toFixed(2);
+				}
+				else if (combo[i].id == "ahorro") {
+					combo[i].value = ahorro.ask.toFixed(2);
+				}
+				else if (combo[i].id == "blue") {
+					combo[i].value = blue.ask.toFixed(2);
+				}
+				else if (combo[i].id == "cripto") {
+					combo[i].value = cripto.usdt.ask.toFixed(2);
+				}
+				else if (combo[i].id == "ccl") {
+					combo[i].value = ccl.al30.ci.price.toFixed(2);
+				}
+				else if (combo[i].id == "mep") {
+					combo[i].value = mep.al30.ci.price.toFixed(2);
+				}
+			}
+			actualizarCotizacion();
+		})
 }
 
 function calcularSimulador() {
 	respSimul.innerHTML = ""
-	const capitalSimul = parseInt(document.getElementById("capitalSimul").value);
+	let capitalSimul = parseInt(document.getElementById("capitalSimul").value);
 	const cuotasSimul = parseInt(document.getElementById("cuotasSimul").value);
+	const select = document.getElementById("select");
+	for (let i = 0; i < select.length; i++) {
+		if(select[i].selected == true) {
+			// Convierto capital simulado a $
+			capitalSimul = capitalSimul*parseFloat(select[i].value);
+		}
+	}
 	let tna = 50;
 	let amortizacion = "Frances Mensual";
 	let calculo = document.createElement("div");
 	if(capitalSimul <= 0  || isNaN(capitalSimul)) {
-		calculo.innerHTML = `<p class="error">Por favor ingrese un monto de Capital positivo</p>`
+		Swal.fire({
+			icon: "error",
+			title: "Oops...",
+			text: "No se ingreso un monto de Capital valido",
+			footer: '<p>El Capital debe ser un monto positivo</p>'
+		});
+		return;
 	}
 	else if(cuotasSimul <= 0 || isNaN(cuotasSimul)) {
-		calculo.innerHTML = `<p class="error">Por favor ingrese una cantidad de cuotas positiva</p>`
+		Swal.fire({
+			icon: "error",
+			title: "Oops...",
+			text: "No se ingreso una cantidad de Cuotas valida",
+			footer: '<p>Las cuotas deben ser al menos 1</p>'
+		});
+		return;
 	}
 	else {
 		let total = capitalSimul + capitalSimul * (tna/100.0) * cuotasSimul / 12;
@@ -181,7 +213,6 @@ function calcularSimulador() {
 		});
 		return;
 	}
-	respSimul.appendChild(calculo);
 }
 
 // Prestamos
@@ -189,18 +220,37 @@ function calcularSimulador() {
 let prestamos = [];
 
 function solicitarPrestamo(capitalSimul,cuotasSimul,total,tna,amortizacion) {
-	let prestamo = {
-		username: username.value,
-		capital: capitalSimul,
-		cuotas: cuotasSimul,
-		total: total,
-		tna: tna,
-		amortizacion: amortizacion,
-		fechaOrig: (new Date()).toLocaleDateString()
-	}
-	prestamos.push(prestamo);
-	localStorage.setItem("prestamos",JSON.stringify(prestamos));
-	mostrarPrestamos();
+
+	Swal.fire({
+		title: "Desea solicitar el prestamo?",
+		text: "El prestamo simulado se asociara a su cuenta!",
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		confirmButtonText: "Si, solicitarlo!",
+		cancelButtonText: "Cancelar"
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire({
+			title: "Completado!",
+			text: "Prestamo generado correctamente.",
+			icon: "success"
+			});
+			let prestamo = {
+				username: username.value,
+				capital: capitalSimul,
+				cuotas: cuotasSimul,
+				total: total,
+				tna: tna,
+				amortizacion: amortizacion,
+				fechaOrig: (new Date()).toLocaleDateString()
+			}
+			prestamos.push(prestamo);
+			localStorage.setItem("prestamos",JSON.stringify(prestamos));
+			mostrarPrestamos();
+		}
+	});
 }
 
 const prestamosVigentes = document.getElementById("contenedorPr");
