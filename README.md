@@ -23,5 +23,5 @@
 * En cualquier momento se puede apretar sobre el boton "Salir", para cambiar de usuario o crear uno nuevo
   
 > [!NOTE]
-> El sitio aun se encuentra en desarrollo (entrega 3 de 4)
+> El sitio fue aprobado, cumpliendo todos los requisitos del curso
 
